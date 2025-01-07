@@ -1,0 +1,270 @@
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+import { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signInWithPopup,sendEmailVerification,signOut,onAuthStateChanged,GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+import { getFirestore,collection,addDoc,getDoc,query,where,doc,getDocs } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+ 
+const firebaseConfig = {
+  apiKey: "AIzaSyAeIULhCoRlOrUyucSxUUPe9ay2c2dvjcE",
+  authDomain: "my-escrow-project.firebaseapp.com",
+  projectId: "my-escrow-project",
+  storageBucket: "my-escrow-project.firebasestorage.app",
+  messagingSenderId: "955393850471",
+  appId: "1:955393850471:web:e5168468db093c7327e8c2",
+  measurementId: "G-G5QD5EP8B3"
+};
+
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
+
+  async function checkpassword(password) {
+
+    try{
+        let status = {
+            isValid: true,
+            containsLowercaseLetter: /^[a-z]$/.test(password),
+            containsUpperCaseLetter: /^[A-Z]$/.test(password),
+            containsSpecialCharacter: /^[!@#$%^&*();.?:{}|<>]$/.test(password),
+            containslength: password.length >= 8
+        };
+        status.isValid = status.containsLowercaseLetter && status.containsUpperCaseLetter && status.containsSpecialCharacter && status.containslength;
+        return status;
+
+    }catch (error) {
+        throw new Error("Password Validation Failed");
+    }
+};
+
+const registerWithEmail = (email,password) => { 
+    const passwordStatus = checkpassword(password);
+    if(!passwordStatus.isValid) {
+        alert('Password does not meet criteria');
+        return;
+    }
+    createUserWithEmailAndPassword(auth,email,password)
+    .then((userCredential) => {
+        const user = userCredential.user;
+        sendEmailVerification(user);
+        alert('Thank you for showing interest on my project! A Verification Email will be sent to you.');
+        if(user.emailVerified) {
+            showEscrowSection();
+        }
+        else {
+            alert('Please verify your email');
+        }
+    })
+    .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        alert('Oopsy! Something went wrong' + errorMessage + errorCode);
+    });
+};
+
+const registerWithGoogle = () => {
+    signInWithPopup(auth,googleProvider)
+    .then((result) => {
+        const user = result.user;
+        alert('Welcome to my project ${user.displayName}');
+    })
+    .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        alert('Error during your Google Sign-In:' + errorMessage);
+    });
+};
+
+document.getElementById('googlesignin').addEventListener('click',registerWithGoogle);
+
+const sendVerificationEmail = (user) => {
+    sendEmailVerification(auth.currentUser)
+    .then(() => {
+        alert('Verification Email is sent to your Email Inbox. Please check it!');
+    })
+    .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        alert('Error sending Email Verification : ' + errorMessage);
+    });
+};
+
+const signIn = (email,password) => {
+    if(!checkpassword(password)) {
+        return;
+    }
+    signInWithEmailAndPassword(auth,email,password)
+    .then((userCredential) => {
+        const user = userCredential.user;
+        checkEmailVerification(user);
+        alert('Email Verified! Login Successful!');
+        showEscrowSection();
+    })
+    .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        alert(errorMessage);
+
+    });
+};
+
+const checkEmailVerification = (user) => {
+    if(user.emailVerified) {
+        alert('Email verified! Login successfully');
+        showEscrowSection();
+    }
+    else {
+        alert('Please verify your Email to signout');
+        auth.signOut();
+    }
+};
+
+const showEscrowSection = () => {
+    document.getElementById('authentication').style.display = 'none';
+    document.getElementById('myfirstproject').style.display = 'block';
+};
+
+const logOut = () => {
+    signOut(auth).then(() => {
+    document.getElementById('authentication').style.display = 'block';
+    document.getElementById('myfirstproject').style.display = 'none';
+    })
+    .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        alert(errorMessage);
+    });
+};
+
+document.getElementById('logout').addEventListener('click',logOut);
+
+onAuthStateChanged(auth,(user) => {
+    if(user) {
+        if(user.emailVerified) {
+            showEscrowSection();
+        }
+        else {
+            alert('Please verify your email');
+            logOut();
+        }
+    }
+});
+
+const escrowForm = document.getElementById('escrowproject');
+escrowForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const sender = document.getElementById('sender').value;
+    const senderPhone = document.getElementById('senderphone').value;
+    const receiver = document.getElementById('receiver').value;
+    const receiverPhone = document.getElementById('receiverphone').value;
+    const amount = parseFloat(document.getElementById('amount').value);
+    const regex = /^[0-9]{10}$/;
+
+    if(!regex.test(senderPhone) || !regex.test(receiverPhone)) {
+        alert('Please enter valid 10 digit phone number');
+        return;
+    }
+
+    try {
+        await addDoc(collection(db,'transactions'),{
+            userId: auth.currentUser.uid,
+            sender,
+            senderPhone,
+            receiver,
+            receiverPhone,
+            amount,
+            date: new Date().toISOString(),
+            type: "escrow",
+            status: "pending"
+        });
+
+        alert('Transaction is successful');
+        escrowForm.reset();
+        history();
+    } catch (error) {
+        console.error('Error in submitting transaction:',error);
+    }
+});
+
+const history = async() => {
+    const user = auth.currentUser;
+    if(!user) {
+        return;
+    }
+    const transactionRef = collection(db,'transactions');
+    const q = query(transactionRef,where('userId','==',user.uid));
+
+    try{
+        const querySnapShot = await getDocs(q);
+        const transactionList = document.getElementById('history-trans');
+        transactionList.innerHTML = '';
+        document.getElementById('Transaction').style.display = 'block';
+        querySnapShot.forEach((doc) => {
+            const transaction = doc.data();
+            const transactionId = doc.id;
+            const listItem = document.createElement('li');
+            listItem.textContent = transaction.date + transaction.type + transaction.amount;
+            listItem.style.cursor = "pointer";
+
+            listItem.addEventListener('click',() => {
+                viewTransactionDetails(transactionId);
+            });
+            transactionList.appendChild(listItem);
+        });
+    } catch (error) {
+        console.error('Error loading Transaction History:',error);
+    }
+}
+
+async function viewTransactionDetails(transactionId) {
+    try {
+        const docRef = doc(db,'transactions',transactionId);
+        const transactionDoc = await getDoc(docRef);
+        if (transactionDoc.exists()) {
+            const transaction = transactionDoc.data();
+            alert("Transaction Details : \nSender:"+ transaction.sender + "\nReceiver: "+ transaction.receiver + "\nAmount: " + transaction.amount + "\nStatus: " +transaction.status);
+        }
+        else {
+            console.error('Transaction not found');
+        }
+    } catch (error) {
+        console.error('Error fetching transaction details:',error);
+    }
+}
+
+document.getElementById('history').addEventListener('click' ,history);
+
+function terms() {
+    const termsDetails = document.getElementById('terms-details');
+    termsDetails.style.display =
+    termsDetails.style.display == 'none' ? 'block' : 'none';
+}
+
+document.getElementById('register').addEventListener('click',() => {
+    const loginForm = document.getElementById('login');
+    const registerForm = document.getElementById('register-form');
+    loginForm.style.display = 'none';
+    registerForm.style.display = 'block';
+});
+document.getElementById('show-login').addEventListener('click',(e) => {
+    const loginForm = document.getElementById('login');
+    const registerForm = document.getElementById('register-form');
+    loginForm.style.display = 'block';
+    registerForm.style.display = 'none';
+});
+
+
+document.getElementById('login').addEventListener('submit',(e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    signIn(email,password);
+});
+
+document.getElementById('register-form').addEventListener('submit',(e) => {
+    e.preventDefault();
+    const email = document.getElementById('reg-email').value;
+    const password = document.getElementById('reg-password').value;
+    registerWithEmail(email,password);
+});
