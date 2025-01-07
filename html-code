@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>WELCOME!</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='project2.css'>
+    <script type="module" src="project1.js"></script>
+</head>
+
+
+<body>
+    <div id="authentication">
+        <h1>Welcome to my Escrow Project</h1>
+    <form id="login">
+        <h2>Login</h2>
+    <div>
+    <label for="email">Email:</label>
+    <input type="email" id="email" placeholder="Enter your Email" required>
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" placeholder="Enter your Password" required>
+    </div>
+    <div>
+        <button type="submit">Log in</button>
+    </div>
+    <p>Don't have an account? <a href="#" id="register">Sign up</a></p>
+    <button id="googlesignin" onclick="registerWithGoogle()"><img src="https://imagepng.org/wp-content/uploads/2019/08/google-icon.png" alt="Google" style="width: 20px"; height="20px"; margin-right="10px;">Sign in with Google</button>
+    </form>
+    <form id="register-form" style="display: none;">
+        <h2>Register</h2>
+        <div>
+            <label for="reg-email">Email</label>
+            <input type="email" id="reg-email" placeholder="Enter your Email" required>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="reg-password" placeholder="Enter you Password" required>
+        </div>
+        <div>
+            <button type="submit">Sign Up</button>
+        </div>
+        <p>Already have an account?<a href="#" id="show-login">Login In</a></p>
+    </form>
+    </div>
+
+
+    <div id="myfirstproject" style="display: none;">
+        <h1>MY ESCROW PROJECT</h1>
+    <form id="escrowproject" method="get">
+    <div class="walterwhite">
+        <label for="sender">Sender Name:</label>
+        <input type="text" id="sender" name="sender" placeholder="Enter Sender's Name" required>
+    </div>
+    <div class="walterwhite">
+        <label for="senderphone">Sender's Mobile Number:</label>
+        <input type="number" id="senderphone" name="senderphone" placeholder="Enter Sender's Mobile Number"pattern="[0-9]{10}"  required>
+    </div>
+    <div class="walterwhite">
+        <label for="receiver">Receiver's Name:</label>
+        <input type="text" id="receiver" name="receiver" placeholder="Enter Receiver's Name" required>
+    </div>
+    <div class="walterwhite">
+        <label for="receiverphone">Receiver's Phone Number:</label>
+        <input type="number" id="receiverphone" name="receiverphone"placeholder="Enter Receiver's Mobile Number" pattern="[0-9]{10}" required>
+    </div>
+    <div class="walterwhite">
+        <label for="amount">Amount to be Sent</label>
+        <input type="number" id="amount" name="amount" placeholder="Enter Amount" min="0.001" step="0.001" required>
+    </div>
+
+
+    <div id="terms">
+    <p id="terms" onclick="terms()">Terms and conditions</p>
+    <div id="terms-details" style="display: none;">
+        <p>Oh congratulations!! You have clicked Terms and Conditions. Hope you have good Transaction.</p>
+        <button type="button" onclick="terms()">Close</button>
+    </div>
+    <div class="submitform">
+        <button type="submit">Submit</button>
+        </div>
+    </form>
+
+
+    <button id="history">Transaction History</button>
+
+    <section id="Transaction" style="display: none;">
+        <h3>Your Transaction History</h3>
+        <ol id="history-trans"></ol>
+        </section>
+        <button id="logout">Log out</button>
+        </div>
+
+        
+        </body>
+        </html>
