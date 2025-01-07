@@ -1,0 +1,198 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+    color: black;
+    margin: 0;
+    background-image: url(https://th.bing.com/th/id/R.82f884ed5d109ec875ea3c111621027f?rik=A8wbs2dycOmz6w&riu=http%3a%2f%2fgetwallpapers.com%2fwallpaper%2ffull%2f5%2fe%2f4%2f770351-large-good-desktop-wallpaper-1920x1080.jpg&ehk=Ln4JMib8Kvew%2fEDA5gXdf7EKNLnvZ2iDp4PaJt6QGvs%3d&risl=&pid=ImgRaw&r=0);
+}
+ h2, h3 {
+    color: royalblue;
+}
+
+p {
+    color: black;
+}
+
+/* Form Styles */
+form {
+    background-color: white;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 8px;
+    width: 300px;
+    box-shadow: 0px 0px 10px black;
+}
+
+form h2 {
+    margin-bottom: 15px;
+    text-align: center;
+    color: blue;
+}
+
+form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid white;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #2980b9;
+}
+
+form p {
+    text-align: center;
+    font-size: 14px;
+}
+
+form a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+form a:hover {
+    text-decoration: underline;
+}
+
+/* Escrow Form Styles */
+#myfirstproject {
+    width: 400px;
+    margin: 20px auto;
+    background-image: url(https://media.istockphoto.com/id/1248542684/vector/abstract-blurred-colorful-background.jpg?s=612x612&w=0&k=20&c=6aJX8oyUBsSBZFQUCJDP7KZ1y4vrf-wEH_SJsuq7B5I=);
+}
+
+.walterwhite {
+    margin-bottom: 15px;
+}
+
+.walterwhite label {
+    font-weight: normal;
+}
+
+.walterwhite input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid white;
+    border-radius: 5px;
+}
+
+#terms {
+    color: #3498db;
+    cursor: pointer;
+    text-decoration: underline;
+    text-align: center;
+}
+
+#terms-details {
+    background-color: white;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+#terms-details button {
+    background-color: chocolate;
+    color: white;
+    padding: 5px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#terms-details button:hover {
+    background-color: lightcoral;
+}
+
+.submitform {
+    text-align: center;
+}
+
+.submitform button {
+    background-color: lightgreen;
+}
+
+.submitform button:hover {
+    background-color: lightgreen;
+}
+
+/* Transaction History Section */
+#Transaction {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+#Transaction h3 {
+    text-align: center;
+    color: #2c3e50;
+}
+
+#history-trans {
+    list-style: none;
+    padding-left: 20px;
+}
+
+#history-trans li {
+    padding: 5px 0;
+    color: #7f8c8d;
+}
+
+/* Buttons */
+button {
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#googlesignin {
+    background-color: #db4437;
+    color: white;
+    margin-top: 10px;
+    padding: 10px;
+    width: 100%;
+}
+
+#googlesignin:hover {
+    background-color: #c1351d;
+}
+
+#logout {
+    width: 100%;
+    padding: 10px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+#logout:hover {
+    background-color: #c0392b;
+}
+h1{
+    color: navy;
+    text-align: center;
+}
